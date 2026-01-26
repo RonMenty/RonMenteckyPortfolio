@@ -36,7 +36,7 @@ const projects = [
   {
     src: "./models/hero.glb",
     title: "Pencil Case with Live Hinge",
-    desc: "3D model of a pencil case featuring a live hinge, fully designed and modeled in CAD."
+    desc: "3D model of a pencil case featuring a live hinge, fully designed and modeled in Autodesk Inventor."
   },
   {
     src: "./models/CFA_Nametag_Allignment_ToolV3WithFlag.glb",
@@ -46,12 +46,12 @@ const projects = [
   {
     src: "./models/WinterHatBottle.glb",
     title: "Winter Hat Bottle",
-    desc: "3D model of a bottle with a winter hat design."
+    desc: "3D model of a bottle with a winter hat design, this model is half of an assembly."
   },
   {
     src: "./models/FlipBottleLid.glb",
     title: "Flip Bottle Lid",
-    desc: "3D model of a bottle lid with a flip-top mechanism."
+    desc: "3D Assembly file of a bottle lid with a flip-top mechanism."
   }
 ];
 
