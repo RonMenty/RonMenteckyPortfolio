@@ -7,19 +7,8 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
 
-  <!-- Import map for Three.js and addons -->
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
-      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"
-    }
-  }
-  </script>
-
   <!-- Model Viewer CDN -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-
 </head>
 <body>
 
@@ -35,7 +24,7 @@
   <!-- ===== HERO ===== -->
   <section class="hero">
     <div class="canvas-wrapper">
-      <canvas id="three-canvas"></canvas>
+      <!-- Hero model-viewer will be injected here -->
     </div>
 
     <div class="about">
@@ -58,11 +47,9 @@
     <h2>Contact Me</h2>
     <p>Email: <a href="mailto:ronaldmentecky@gmail.com">ronaldmentecky@gmail.com</a></p>
     <p>LinkedIn: <a href="https://www.linkedin.com/in/ronald-mentecky-a1a73a267/">https://www.linkedin.com/in/ronald-mentecky</a></p>
-
   </section>
-<!--https://www.linkedin.com/in/ronald-mentecky-a1a73a267/-->>
+
   <!-- ===== MAIN JS ===== -->
   <script type="module" src="main.js"></script>
-
 </body>
 </html>

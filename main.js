@@ -1,42 +1,9 @@
-import * as THREE from "three";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-
-/* ===== CANVAS / SCENE ===== */
-const canvas = document.getElementById("three-canvas");
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x000000);
-
-/* ===== CAMERA ===== */
-const camera = new THREE.PerspectiveCamera(
-  45,
-  canvas.clientWidth / canvas.clientHeight,
-  0.1,
-  1000
-);
-camera.position.set(0, 0, 5);
-
-/* ===== RENDERER ===== */
-const renderer = new THREE.WebGLRenderer({
-  canvas,
-  antialias: true,
-  alpha: false
-});
-renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
-
-/* ===== LIGHTING ===== */
-scene.add(new THREE.AmbientLight(0xffffff, 1.2));
-
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-directionalLight.position.set(5, 10, 7.5);
-scene.add(directionalLight);
-
 /* ===== PROJECT DATA ===== */
 const projects = [
   {
     src: "./models/hero.glb",
-    title: "Pencil Case with Live Hinge",
-    desc: "3D model of a pencil case featuring a live hinge, fully designed and modeled in Autodesk Inventor."
+    title: "32oz Snap-On-Lid Cup",
+    desc: "3D assembly of a lid with accompanying snap-on-lid, fully designed and modeled in Autodesk Inventor."
   },
   {
     src: "./models/CFA_Nametag_Allignment_ToolV3WithFlag.glb",
@@ -44,9 +11,14 @@ const projects = [
     desc: "Tool to perfectly align name tags for Chick-fil-A, designed for precise sticker placement."
   },
   {
-    src: "./models/WinterHatBottle.glb",
-    title: "Winter Hat Bottle",
-    desc: "3D model of a bottle with a winter hat design, this model is half of an assembly."
+    src: "./models/SoapHolder.glb",
+    title: "Soap Holder",
+    desc: "3D model of a Soap Holder created through requested dimantional constraints."
+  },
+  {
+    src: "./models/GolfCap115.glb",
+    title: "Golf Sim Rubber Tee",
+    desc: "A personal project to solve problems of already created Rubber Tees, this model was flawed and has been improved into a model currently being sold."
   },
   {
     src: "./models/FlipBottleLid.glb",
@@ -55,109 +27,59 @@ const projects = [
   }
 ];
 
-/* ===== HERO MODEL ===== */
-const loader = new GLTFLoader();
-let heroModel = null;
+/* ===== INIT MODEL-VIEWER LOADING ===== */
+customElements.whenDefined("model-viewer").then(() => {
+  // ---- HERO MODEL ----
+  const canvasWrapper = document.querySelector(".canvas-wrapper");
+  const hero = document.createElement("model-viewer");
 
-/* ===== LOAD HERO ===== */
-function loadHeroModel() {
-  loader.load(
-    projects[0].src,
-    (gltf) => {
-      heroModel = gltf.scene;
+  hero.src = projects[0].src;
+  hero.alt = projects[0].title;
+  hero.autoRotate = true;
+  hero.cameraControls = true;
+  hero.loading = "lazy";
 
-      heroModel.scale.set(0.5, 0.5, 0.5);
-      heroModel.position.set(0, 0.25, 0);
-      heroModel.rotation.x = 0.5;
+  canvasWrapper.appendChild(hero);
 
-      heroModel.traverse((child) => {
-        if (child.isMesh) {
-          child.material = new THREE.MeshStandardMaterial({
-            color: 0xffffff,
-            metalness: 0.1,
-            roughness: 0.6,
-            wireframe: true
-          });
-        }
-      });
+  // ---- PROJECT CARDS ----
+  const grid = document.getElementById("projects-grid");
 
-      scene.add(heroModel);
-      centerBio();
-    },
-    undefined,
-    (err) => console.error("Hero model failed to load:", err)
-  );
-}
+  projects.slice(0).forEach((p) => { // skip hero
+    const card = document.createElement("div");
+    card.className = "project";
 
-/* ===== ANIMATION LOOP ===== */
-function animate() {
-  requestAnimationFrame(animate);
+    card.innerHTML = `
+      <model-viewer
+        src="${p.src}"
+        alt="${p.title}"
+        auto-rotate
+        camera-controls
+        loading="lazy">
+      </model-viewer>
+      <h3>${p.title}</h3>
+      <p>${p.desc}</p>
+    `;
 
-  if (heroModel) {
-    heroModel.rotation.y += 0.01;
+    grid.appendChild(card);
+  });
+
+  // ---- CENTER BIO (DESKTOP ONLY) ----
+  const bio = document.querySelector(".about");
+
+  function centerBio() {
+    if (window.innerWidth < 768) return;
+
+    const wrapperRect = canvasWrapper.getBoundingClientRect();
+    const bioRect = bio.getBoundingClientRect();
+
+    bio.style.top =
+      wrapperRect.top +
+      wrapperRect.height / 2 - 
+      bioRect.height / 2 +
+      window.scrollY + "px";
   }
 
-  renderer.render(scene, camera);
-}
-animate();
-
-/* ===== BIO POSITIONING (DESKTOP ONLY) ===== */
-const bio = document.querySelector(".about");
-
-function centerBio() {
-  if (window.innerWidth < 768) return;
-
-  const canvasRect = canvas.getBoundingClientRect();
-  const bioRect = bio.getBoundingClientRect();
-
-  bio.style.top =
-    canvasRect.top +
-    canvasRect.height / 2 -
-    bioRect.height / 2 +
-    window.scrollY +
-    "px";
-}
-
-/* ===== RESIZE HANDLING ===== */
-window.addEventListener("resize", () => {
-  const width = canvas.clientWidth;
-  const height = canvas.clientHeight;
-
-  renderer.setSize(width, height);
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-
   centerBio();
+  window.addEventListener("resize", centerBio);
+  window.addEventListener("scroll", centerBio);
 });
-
-window.addEventListener("scroll", centerBio);
-
-/* ===== PROJECT GRID ===== */
-function populateProjects() {
-  customElements.whenDefined("model-viewer").then(() => {
-    const grid = document.getElementById("projects-grid");
-
-    projects.forEach((p) => {
-      const card = document.createElement("div");
-      card.className = "project";
-
-      card.innerHTML = `
-        <model-viewer
-          src="${p.src}"
-          alt="${p.title}"
-          auto-rotate
-          camera-controls
-          loading="lazy">
-        </model-viewer>
-        <h3>${p.title}</h3>
-        <p>${p.desc}</p>
-      `;
-
-      grid.appendChild(card);
-    });
-  });
-}
-
-/* ===== INIT ===== */
-loadHeroModel();
-populateProjects();
