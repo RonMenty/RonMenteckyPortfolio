@@ -6,9 +6,9 @@ const projects = [
     desc: "3D assembly of a lid with accompanying snap-on-lid, fully designed and modeled in Autodesk Inventor."
   },
   {
-    src: "./models/CFA_Nametag_Allignment_ToolV3WithFlag.glb",
-    title: "CFA Nametag Alignment Tool",
-    desc: "Tool to perfectly align name tags for Chick-fil-A, designed for precise sticker placement."
+    src: "./models/DepewFloorPlan.glb",
+    title: "Depew Floor Plan",
+    desc: "A floor plan measures and created upon request as a school assignment."
   },
   {
     src: "./models/SoapHolder.glb",
